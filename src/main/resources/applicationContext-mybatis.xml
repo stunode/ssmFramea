@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+        <!-- 数据源设置 -->
+        <bean id="DataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+            <property name="driverClassName" value="${data_source_driver}"/>
+            <property name="url" value="${data_source_url}"/>
+            <property name="username" value="${data_source_username}"/>
+            <property name="password" value="${data_source_password}"/>
+            <!-- 初始化连接池 -->
+            <property name="initialSize" value="${jdbc.ds.initialSize}"/>
+            <!-- 可能的最大并发数-->
+            <property name="maxActive" value="${jdbc.ds.maxActive}"/>
+            <!-- 连接池中最小空闲连接-->
+            <property name="minIdle" value="${jdbc.ds.minIdle}"/>
+
+            <!-- 3600000毫秒（1小时）检查一次连接池中空闲的连接，把空闲时间超过minEvictableIdleTimeMillis的连接清理掉，直到
+            连接池中的连接数到minIdle-->
+            <property name="timeBetweenEvictionRunsMillis" value="3600000"/>
+            <property name="minEvictableIdleTimeMillis" value="3600000"/>
+
+            <property name="validationQuery" value="SELECT 'x'"/>
+            <property name="testWhileIdle" value="true"/>
+            <property name="testOnBorrow" value="false"/>
+            <property name="testOnReturn" value="false"/>
+        </bean>
+        <!-- sqlSessionFactory配置 -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+            <property name="configLocation" value="classpath:conf/sqlMap/sqlMap_config.xml"/>
+            <property name="dataSource" ref="DataSource"/>
+        </bean>
+        <!-- SqlSessionTemplate配置 -->
+        <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+            <constructor-arg index="0" ref="sqlSessionFactory"/>
+        </bean>
+
+</beans>
