@@ -6,5 +6,6 @@
        </properties>
        <mappers>
               <mapper resource="conf/sqlMap/sqlMap_items.xml"/>
+              <mapper resource="conf/sqlMap/ScheduleJobMapper.xml"/>
        </mappers>
 </configuration>
