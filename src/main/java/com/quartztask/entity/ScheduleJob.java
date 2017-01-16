@@ -3,152 +3,152 @@ package com.quartztask.entity;
 import java.util.Date;
 
 /**
- * 
-* @Description: ¼Æ»®ÈÎÎñĞÅÏ¢
-* @author snailxr
-* @date 2014Äê6ÔÂ6ÈÕ ÏÂÎç10:49:43
+ *
+ * @Description: è®¡åˆ’ä»»åŠ¡ä¿¡æ¯
+ * @author snailxr
+ * @date 2014å¹´6æœˆ6æ—¥ ä¸‹åˆ10:49:43
  */
 public class ScheduleJob {
 
-	public static final String STATUS_RUNNING = "1";
-	public static final String STATUS_NOT_RUNNING = "0";
-	public static final String CONCURRENT_IS = "1";
-	public static final String CONCURRENT_NOT = "0";
-	private Long jobId;
+    public static final String STATUS_RUNNING = "1";
+    public static final String STATUS_NOT_RUNNING = "0";
+    public static final String CONCURRENT_IS = "1";
+    public static final String CONCURRENT_NOT = "0";
+    private Long jobId;
 
-	private Date createTime;
+    private Date createTime;
 
-	private Date updateTime;
-	/**
-	 * ÈÎÎñÃû³Æ
-	 */
-	private String jobName;
-	/**
-	 * ÈÎÎñ·Ö×é
-	 */
-	private String jobGroup;
-	/**
-	 * ÈÎÎñ×´Ì¬ ÊÇ·ñÆô¶¯ÈÎÎñ
-	 */
-	private String jobStatus;
-	/**
-	 * cron±í´ïÊ½
-	 */
-	private String cronExpression;
-	/**
-	 * ÃèÊö
-	 */
-	private String description;
-	/**
-	 * ÈÎÎñÖ´ĞĞÊ±µ÷ÓÃÄÄ¸öÀàµÄ·½·¨ °üÃû+ÀàÃû
-	 */
-	private String beanClass;
-	/**
-	 * ÈÎÎñÊÇ·ñÓĞ×´Ì¬
-	 */
-	private String isConcurrent;
-	/**
-	 * spring bean
-	 */
-	private String springId;
-	/**
-	 * ÈÎÎñµ÷ÓÃµÄ·½·¨Ãû
-	 */
-	private String methodName;
+    private Date updateTime;
+    /**
+     * ä»»åŠ¡åç§°
+     */
+    private String jobName;
+    /**
+     * ä»»åŠ¡åˆ†ç»„
+     */
+    private String jobGroup;
+    /**
+     * ä»»åŠ¡çŠ¶æ€ æ˜¯å¦å¯åŠ¨ä»»åŠ¡
+     */
+    private String jobStatus;
+    /**
+     * cronè¡¨è¾¾å¼
+     */
+    private String cronExpression;
+    /**
+     * æè¿°
+     */
+    private String description;
+    /**
+     * ä»»åŠ¡æ‰§è¡Œæ—¶è°ƒç”¨å“ªä¸ªç±»çš„æ–¹æ³• åŒ…å+ç±»å
+     */
+    private String beanClass;
+    /**
+     * ä»»åŠ¡æ˜¯å¦æœ‰çŠ¶æ€
+     */
+    private String isConcurrent;
+    /**
+     * spring bean
+     */
+    private String springId;
+    /**
+     * ä»»åŠ¡è°ƒç”¨çš„æ–¹æ³•å
+     */
+    private String methodName;
 
-	public Long getJobId() {
-		return jobId;
-	}
+    public Long getJobId() {
+        return jobId;
+    }
 
-	public void setJobId(Long jobId) {
-		this.jobId = jobId;
-	}
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public String getJobName() {
-		return jobName;
-	}
+    public String getJobName() {
+        return jobName;
+    }
 
-	public void setJobName(String jobName) {
-		this.jobName = jobName;
-	}
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
 
-	public String getJobGroup() {
-		return jobGroup;
-	}
+    public String getJobGroup() {
+        return jobGroup;
+    }
 
-	public void setJobGroup(String jobGroup) {
-		this.jobGroup = jobGroup;
-	}
+    public void setJobGroup(String jobGroup) {
+        this.jobGroup = jobGroup;
+    }
 
-	public String getJobStatus() {
-		return jobStatus;
-	}
+    public String getJobStatus() {
+        return jobStatus;
+    }
 
-	public void setJobStatus(String jobStatus) {
-		this.jobStatus = jobStatus;
-	}
+    public void setJobStatus(String jobStatus) {
+        this.jobStatus = jobStatus;
+    }
 
-	public String getCronExpression() {
-		return cronExpression;
-	}
+    public String getCronExpression() {
+        return cronExpression;
+    }
 
-	public void setCronExpression(String cronExpression) {
-		this.cronExpression = cronExpression;
-	}
+    public void setCronExpression(String cronExpression) {
+        this.cronExpression = cronExpression;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getBeanClass() {
-		return beanClass;
-	}
+    public String getBeanClass() {
+        return beanClass;
+    }
 
-	public void setBeanClass(String beanClass) {
-		this.beanClass = beanClass;
-	}
+    public void setBeanClass(String beanClass) {
+        this.beanClass = beanClass;
+    }
 
-	public String getIsConcurrent() {
-		return isConcurrent;
-	}
+    public String getIsConcurrent() {
+        return isConcurrent;
+    }
 
-	public void setIsConcurrent(String isConcurrent) {
-		this.isConcurrent = isConcurrent;
-	}
+    public void setIsConcurrent(String isConcurrent) {
+        this.isConcurrent = isConcurrent;
+    }
 
-	public String getSpringId() {
-		return springId;
-	}
+    public String getSpringId() {
+        return springId;
+    }
 
-	public void setSpringId(String springId) {
-		this.springId = springId;
-	}
+    public void setSpringId(String springId) {
+        this.springId = springId;
+    }
 
-	public String getMethodName() {
-		return methodName;
-	}
+    public String getMethodName() {
+        return methodName;
+    }
 
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
-	}
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
 }

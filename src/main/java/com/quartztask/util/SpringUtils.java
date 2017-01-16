@@ -7,82 +7,82 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 public final class SpringUtils implements BeanFactoryPostProcessor {
 
-	private static ConfigurableListableBeanFactory beanFactory; // SpringÓ¦ÓÃÉÏÏÂÎÄ»·¾³
+    private static ConfigurableListableBeanFactory beanFactory; // Springåº”ç”¨ä¸Šä¸‹æ–‡ç¯å¢ƒ
 
-	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		SpringUtils.beanFactory = beanFactory;
-	}
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        SpringUtils.beanFactory = beanFactory;
+    }
 
-	/**
-	 * »ñÈ¡¶ÔÏó
-	 *
-	 * @param name
-	 * @return Object Ò»¸öÒÔËù¸øÃû×Ö×¢²áµÄbeanµÄÊµÀı
-	 * @throws org.springframework.beans.BeansException
-	 *
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T getBean(String name) throws BeansException {
-		return (T) beanFactory.getBean(name);
-	}
+    /**
+     * è·å–å¯¹è±¡
+     *
+     * @param name
+     * @return Object ä¸€ä¸ªä»¥æ‰€ç»™åå­—æ³¨å†Œçš„beançš„å®ä¾‹
+     * @throws org.springframework.beans.BeansException
+     *
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getBean(String name) throws BeansException {
+        return (T) beanFactory.getBean(name);
+    }
 
-	/**
-	 * »ñÈ¡ÀàĞÍÎªrequiredTypeµÄ¶ÔÏó
-	 *
-	 * @param clz
-	 * @return
-	 * @throws org.springframework.beans.BeansException
-	 *
-	 */
-	public static <T> T getBean(Class<T> clz) throws BeansException {
-		@SuppressWarnings("unchecked")
-		T result = (T) beanFactory.getBean(clz);
-		return result;
-	}
+    /**
+     * è·å–ç±»å‹ä¸ºrequiredTypeçš„å¯¹è±¡
+     *
+     * @param clz
+     * @return
+     * @throws org.springframework.beans.BeansException
+     *
+     */
+    public static <T> T getBean(Class<T> clz) throws BeansException {
+        @SuppressWarnings("unchecked")
+        T result = (T) beanFactory.getBean(clz);
+        return result;
+    }
 
-	/**
-	 * Èç¹ûBeanFactory°üº¬Ò»¸öÓëËù¸øÃû³ÆÆ¥ÅäµÄbean¶¨Òå£¬Ôò·µ»Øtrue
-	 *
-	 * @param name
-	 * @return boolean
-	 */
-	public static boolean containsBean(String name) {
-		return beanFactory.containsBean(name);
-	}
+    /**
+     * å¦‚æœBeanFactoryåŒ…å«ä¸€ä¸ªä¸æ‰€ç»™åç§°åŒ¹é…çš„beanå®šä¹‰ï¼Œåˆ™è¿”å›true
+     *
+     * @param name
+     * @return boolean
+     */
+    public static boolean containsBean(String name) {
+        return beanFactory.containsBean(name);
+    }
 
-	/**
-	 * ÅĞ¶ÏÒÔ¸ø¶¨Ãû×Ö×¢²áµÄbean¶¨ÒåÊÇÒ»¸ösingleton»¹ÊÇÒ»¸öprototype¡£
-	 * Èç¹ûÓë¸ø¶¨Ãû×ÖÏàÓ¦µÄbean¶¨ÒåÃ»ÓĞ±»ÕÒµ½£¬½«»áÅ×³öÒ»¸öÒì³££¨NoSuchBeanDefinitionException£©
-	 *
-	 * @param name
-	 * @return boolean
-	 * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
-	 *
-	 */
-	public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
-		return beanFactory.isSingleton(name);
-	}
+    /**
+     * åˆ¤æ–­ä»¥ç»™å®šåå­—æ³¨å†Œçš„beanå®šä¹‰æ˜¯ä¸€ä¸ªsingletonè¿˜æ˜¯ä¸€ä¸ªprototypeã€‚
+     * å¦‚æœä¸ç»™å®šåå­—ç›¸åº”çš„beanå®šä¹‰æ²¡æœ‰è¢«æ‰¾åˆ°ï¼Œå°†ä¼šæŠ›å‡ºä¸€ä¸ªå¼‚å¸¸ï¼ˆNoSuchBeanDefinitionExceptionï¼‰
+     *
+     * @param name
+     * @return boolean
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     *
+     */
+    public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
+        return beanFactory.isSingleton(name);
+    }
 
-	/**
-	 * @param name
-	 * @return Class ×¢²á¶ÔÏóµÄÀàĞÍ
-	 * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
-	 *
-	 */
-	public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
-		return beanFactory.getType(name);
-	}
+    /**
+     * @param name
+     * @return Class æ³¨å†Œå¯¹è±¡çš„ç±»å‹
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     *
+     */
+    public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
+        return beanFactory.getType(name);
+    }
 
-	/**
-	 * Èç¹û¸ø¶¨µÄbeanÃû×ÖÔÚbean¶¨ÒåÖĞÓĞ±ğÃû£¬Ôò·µ»ØÕâĞ©±ğÃû
-	 *
-	 * @param name
-	 * @return
-	 * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
-	 * 
-	 */
-	public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
-		return beanFactory.getAliases(name);
-	}
+    /**
+     * å¦‚æœç»™å®šçš„beanåå­—åœ¨beanå®šä¹‰ä¸­æœ‰åˆ«åï¼Œåˆ™è¿”å›è¿™äº›åˆ«å
+     *
+     * @param name
+     * @return
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     *
+     */
+    public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
+        return beanFactory.getAliases(name);
+    }
 
 }

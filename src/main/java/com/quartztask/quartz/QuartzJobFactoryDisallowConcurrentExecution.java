@@ -9,18 +9,18 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 
- * @Description: ÈôÒ»¸ö·½·¨Ò»´ÎÖ´ĞĞ²»ÍêÏÂ´ÎÂÖ×ªÊ±ÔòµÈ´ı¸Ä·½·¨Ö´ĞĞÍêºó²ÅÖ´ĞĞÏÂÒ»´Î²Ù×÷
+ *
+ * @Description: è‹¥ä¸€ä¸ªæ–¹æ³•ä¸€æ¬¡æ‰§è¡Œä¸å®Œä¸‹æ¬¡è½®è½¬æ—¶åˆ™ç­‰å¾…æ”¹æ–¹æ³•æ‰§è¡Œå®Œåæ‰æ‰§è¡Œä¸‹ä¸€æ¬¡æ“ä½œ
  * @author chenjianlin
- * @date 2014Äê4ÔÂ24ÈÕ ÏÂÎç5:05:47
+ * @date 2014å¹´4æœˆ24æ—¥ ä¸‹åˆ5:05:47
  */
 @DisallowConcurrentExecution
 public class QuartzJobFactoryDisallowConcurrentExecution implements Job {
-	public final Logger log = Logger.getLogger(this.getClass());
+    public final Logger log = Logger.getLogger(this.getClass());
 
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		ScheduleJob scheduleJob = (ScheduleJob) context.getMergedJobDataMap().get("scheduleJob");
-		TaskUtils.invokMethod(scheduleJob);
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        ScheduleJob scheduleJob = (ScheduleJob) context.getMergedJobDataMap().get("scheduleJob");
+        TaskUtils.invokMethod(scheduleJob);
 
-	}
+    }
 }

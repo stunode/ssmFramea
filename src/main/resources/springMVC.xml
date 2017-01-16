@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-                        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-                        http://www.springframework.org/schema/context
-                        http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/mvc
-                        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-       <!--上面的xsd最好和当前使用的Spring版本号一致,如果换了Spring版本,这个最好也跟着改,
-       表示命名空间，用于识别xml中的标签-->
-       <!-- 扫描controller控制器-->
-       <context:component-scan base-package="com.quartztask.controller"/>
-       <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀(如果最后一个还是表示文件夹,则最后的斜杠不要漏了) 使用JSP-->
-       <bean id="defaultViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-              <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-              <property name="prefix" value="/WEB-INF/view/"/><!--设置JSP文件的目录位置-->
-              <property name="suffix" value=".jsp"/>
-       </bean>
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--上面的xsd最好和当前使用的Spring版本号一致,如果换了Spring版本,这个最好也跟着改,
+    表示命名空间，用于识别xml中的标签-->
+
+    <context:property-placeholder location="classpath:application.properties"/>
+    <!-- 扫描controller控制器-->
+    <context:component-scan base-package="com.quartztask.controller"/>
+
+    <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀(如果最后一个还是表示文件夹,则最后的斜杠不要漏了) 使用JSP-->
+    <bean id="viewResolver" abstract="true">
+        <property name="attributes">
+            <props>
+                <prop key="resRoot">${myWeb.resRoot}</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" parent="viewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <!--设置JSP文件的目录位置-->
+        <property name="suffix" value=".jsp"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+    </bean>
+
 </beans>

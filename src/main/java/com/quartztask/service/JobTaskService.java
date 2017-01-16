@@ -18,214 +18,240 @@ import java.util.Set;
 
 /**
  *
- * @Description: º∆ªÆ»ŒŒÒπ‹¿Ì
+ * @Description: ËÆ°Âàí‰ªªÂä°ÁÆ°ÁêÜ
  * @author chenjianlin
- * @date 2014ƒÍ4‘¬25»’ œ¬ŒÁ2:43:54
+ * @date 2014Âπ¥4Êúà25Êó• ‰∏ãÂçà2:43:54
  */
 @Service
 public class JobTaskService {
-	public final Logger log = Logger.getLogger(this.getClass());
-	@Autowired
-	private SchedulerFactoryBean schedulerFactoryBean;
+    public final Logger log = Logger.getLogger(this.getClass());
+    @Autowired
+    private SchedulerFactoryBean schedulerFactoryBean;
 
-	@Autowired
-	private IScheduleJobService scheduleJobService;
+    @Autowired
+    private IScheduleJobService scheduleJobService;
 
-	/**
-	 * ¥” ˝æ›ø‚÷–»° «¯±”⁄getAllJob
-	 *
-	 * @return
-	 */
-	public List<ScheduleJob> getAllTask() {
-		return scheduleJobService.getAllJobList();
-	}
+    /**
+     * ‰ªéÊï∞ÊçÆÂ∫ì‰∏≠Âèñ Âå∫Âà´‰∫égetAllJob
+     *
+     * @return
+     */
+    public List<ScheduleJob> getAllTask() {
+        return scheduleJobService.getAllJobList();
+    }
 
+    /**
+     * Ê∑ªÂä†Âà∞Êï∞ÊçÆÂ∫ì‰∏≠ Âå∫Âà´‰∫éaddJob
+     */
+    public void addTask(ScheduleJob job) {
+        job.setCreateTime(new Date());
+        scheduleJobService.insertSelective(job);
+    }
+    /**
+     * Êõ¥Êîπ‰ªªÂä°Áä∂ÊÄÅ
+     *
+     * @throws SchedulerException
+     */
+    public void changeStatus(Long jobId, String cmd) throws SchedulerException {
+        ScheduleJob job = scheduleJobService.getJobById(jobId);
+        if (job == null) {
+            return;
+        }
+        if ("stop".equals(cmd)) {
+            deleteJob(job);
+            job.setJobStatus(ScheduleJob.STATUS_NOT_RUNNING);
+        } else if ("start".equals(cmd)) {
+            job.setJobStatus(ScheduleJob.STATUS_RUNNING);
+            addJob(job);
+        }
+        scheduleJobService.updateByPrimaryKeySelective(job);
+    }
 
-	/**
-	 * ÃÌº”»ŒŒÒ
-	 * @throws SchedulerException
-	 */
-	public void addJob(ScheduleJob job) throws SchedulerException {
-		if (job == null || !ScheduleJob.STATUS_RUNNING.equals(job.getJobStatus())) {
-			return;
-		}
+    /**
+     * Ê∑ªÂä†‰ªªÂä°
+     * @throws SchedulerException
+     */
+    public void addJob(ScheduleJob job) throws SchedulerException {
+        if (job == null || !ScheduleJob.STATUS_RUNNING.equals(job.getJobStatus())) {
+            return;
+        }
 
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-		log.debug(scheduler + ".......................................................................................add");
-		TriggerKey triggerKey = TriggerKey.triggerKey(job.getJobName(), job.getJobGroup());
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        log.debug(scheduler + ".......................................................................................add");
+        TriggerKey triggerKey = TriggerKey.triggerKey(job.getJobName(), job.getJobGroup());
 
-		CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+        CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
 
-		// ≤ª¥Ê‘⁄£¨¥¥Ω®“ª∏ˆ
-		if (null == trigger) {
-			Class clazz = ScheduleJob.CONCURRENT_IS.equals(job.getIsConcurrent()) ? QuartzJobFactory.class : QuartzJobFactoryDisallowConcurrentExecution.class;
+        // ‰∏çÂ≠òÂú®ÔºåÂàõÂª∫‰∏Ä‰∏™
+        if (null == trigger) {
+            Class clazz = ScheduleJob.CONCURRENT_IS.equals(job.getIsConcurrent()) ? QuartzJobFactory.class : QuartzJobFactoryDisallowConcurrentExecution.class;
 
-			JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(job.getJobName(), job.getJobGroup()).build();
+            JobDetail jobDetail = JobBuilder.newJob(clazz).withIdentity(job.getJobName(), job.getJobGroup()).build();
 
-			jobDetail.getJobDataMap().put("scheduleJob", job);
+            jobDetail.getJobDataMap().put("scheduleJob", job);
 
-			CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(job.getCronExpression());
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(job.getCronExpression());
 
-			trigger = TriggerBuilder.newTrigger().withIdentity(job.getJobName(), job.getJobGroup()).withSchedule(scheduleBuilder).build();
+            trigger = TriggerBuilder.newTrigger().withIdentity(job.getJobName(), job.getJobGroup()).withSchedule(scheduleBuilder).build();
 
-			scheduler.scheduleJob(jobDetail, trigger);
-		} else {
-			// Trigger“—¥Ê‘⁄£¨ƒ«√¥∏¸–¬œ‡”¶µƒ∂® ±…Ë÷√
-			CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(job.getCronExpression());
+            scheduler.scheduleJob(jobDetail, trigger);
+        } else {
+            // TriggerÂ∑≤Â≠òÂú®ÔºåÈÇ£‰πàÊõ¥Êñ∞Áõ∏Â∫îÁöÑÂÆöÊó∂ËÆæÁΩÆ
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(job.getCronExpression());
 
-			// ∞¥–¬µƒcronExpression±Ì¥Ô Ω÷ÿ–¬ππΩ®trigger
-			trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+            // ÊåâÊñ∞ÁöÑcronExpressionË°®ËææÂºèÈáçÊñ∞ÊûÑÂª∫trigger
+            trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
 
-			// ∞¥–¬µƒtrigger÷ÿ–¬…Ë÷√job÷¥––
-			scheduler.rescheduleJob(triggerKey, trigger);
-		}
-	}
+            // ÊåâÊñ∞ÁöÑtriggerÈáçÊñ∞ËÆæÁΩÆjobÊâßË°å
+            scheduler.rescheduleJob(triggerKey, trigger);
+        }
+    }
 
-	@PostConstruct
-	public void init() throws Exception {
+    @PostConstruct
+    public void init() throws Exception {
 
-		System.out.println("=====================================µ˜∂»≥ı ºªØ================================");
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        System.out.println("=====================================Ë∞ÉÂ∫¶ÂàùÂßãÂåñ================================");
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
-		// ’‚¿ÔªÒ»°»ŒŒÒ–≈œ¢ ˝æ›
-		List<ScheduleJob> jobList = scheduleJobService.getAllJobList();
+        // ËøôÈáåËé∑Âèñ‰ªªÂä°‰ø°ÊÅØÊï∞ÊçÆ
+        List<ScheduleJob> jobList = scheduleJobService.getAllJobList();
 
-		for (ScheduleJob job : jobList) {
-			addJob(job);
-		}
-	}
+        for (ScheduleJob job : jobList) {
+            addJob(job);
+        }
+    }
 
-	/**
-	 * ªÒ»°À˘”–º∆ªÆ÷–µƒ»ŒŒÒ¡–±Ì
-	 *
-	 * @return
-	 * @throws SchedulerException
-	 */
-	public List<ScheduleJob> getAllJob() throws SchedulerException {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-		GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
-		Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
-		List<ScheduleJob> jobList = new ArrayList<ScheduleJob>();
-		for (JobKey jobKey : jobKeys) {
-			List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-			for (Trigger trigger : triggers) {
-				ScheduleJob job = new ScheduleJob();
-				job.setJobName(jobKey.getName());
-				job.setJobGroup(jobKey.getGroup());
-				job.setDescription("¥•∑¢∆˜:" + trigger.getKey());
-				Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-				job.setJobStatus(triggerState.name());
-				if (trigger instanceof CronTrigger) {
-					CronTrigger cronTrigger = (CronTrigger) trigger;
-					String cronExpression = cronTrigger.getCronExpression();
-					job.setCronExpression(cronExpression);
-				}
-				jobList.add(job);
-			}
-		}
-		return jobList;
-	}
+    /**
+     * Ëé∑ÂèñÊâÄÊúâËÆ°Âàí‰∏≠ÁöÑ‰ªªÂä°ÂàóË°®
+     *
+     * @return
+     * @throws SchedulerException
+     */
+    public List<ScheduleJob> getAllJob() throws SchedulerException {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
+        Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
+        List<ScheduleJob> jobList = new ArrayList<ScheduleJob>();
+        for (JobKey jobKey : jobKeys) {
+            List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+            for (Trigger trigger : triggers) {
+                ScheduleJob job = new ScheduleJob();
+                job.setJobName(jobKey.getName());
+                job.setJobGroup(jobKey.getGroup());
+                job.setDescription("Ëß¶ÂèëÂô®:" + trigger.getKey());
+                Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+                job.setJobStatus(triggerState.name());
+                if (trigger instanceof CronTrigger) {
+                    CronTrigger cronTrigger = (CronTrigger) trigger;
+                    String cronExpression = cronTrigger.getCronExpression();
+                    job.setCronExpression(cronExpression);
+                }
+                jobList.add(job);
+            }
+        }
+        return jobList;
+    }
 
-	/**
-	 * À˘”–’˝‘⁄‘À––µƒjob
-	 *
-	 * @return
-	 * @throws SchedulerException
-	 */
-	public List<ScheduleJob> getRunningJob() throws SchedulerException {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-		List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
-		List<ScheduleJob> jobList = new ArrayList<ScheduleJob>(executingJobs.size());
-		for (JobExecutionContext executingJob : executingJobs) {
-			ScheduleJob job = new ScheduleJob();
-			JobDetail jobDetail = executingJob.getJobDetail();
-			JobKey jobKey = jobDetail.getKey();
-			Trigger trigger = executingJob.getTrigger();
-			job.setJobName(jobKey.getName());
-			job.setJobGroup(jobKey.getGroup());
-			job.setDescription("¥•∑¢∆˜:" + trigger.getKey());
-			Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-			job.setJobStatus(triggerState.name());
-			if (trigger instanceof CronTrigger) {
-				CronTrigger cronTrigger = (CronTrigger) trigger;
-				String cronExpression = cronTrigger.getCronExpression();
-				job.setCronExpression(cronExpression);
-			}
-			jobList.add(job);
-		}
-		return jobList;
-	}
+    /**
+     * ÊâÄÊúâÊ≠£Âú®ËøêË°åÁöÑjob
+     *
+     * @return
+     * @throws SchedulerException
+     */
+    public List<ScheduleJob> getRunningJob() throws SchedulerException {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
+        List<ScheduleJob> jobList = new ArrayList<ScheduleJob>(executingJobs.size());
+        for (JobExecutionContext executingJob : executingJobs) {
+            ScheduleJob job = new ScheduleJob();
+            JobDetail jobDetail = executingJob.getJobDetail();
+            JobKey jobKey = jobDetail.getKey();
+            Trigger trigger = executingJob.getTrigger();
+            job.setJobName(jobKey.getName());
+            job.setJobGroup(jobKey.getGroup());
+            job.setDescription("Ëß¶ÂèëÂô®:" + trigger.getKey());
+            Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+            job.setJobStatus(triggerState.name());
+            if (trigger instanceof CronTrigger) {
+                CronTrigger cronTrigger = (CronTrigger) trigger;
+                String cronExpression = cronTrigger.getCronExpression();
+                job.setCronExpression(cronExpression);
+            }
+            jobList.add(job);
+        }
+        return jobList;
+    }
 
-	/**
-	 * ‘›Õ£“ª∏ˆjob
-	 *
-	 * @param scheduleJob
-	 * @throws SchedulerException
-	 */
-	public void pauseJob(ScheduleJob scheduleJob) throws SchedulerException {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-		JobKey jobKey = JobKey.jobKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
-		scheduler.pauseJob(jobKey);
-	}
+    /**
+     * ÊöÇÂÅú‰∏Ä‰∏™job
+     *
+     * @param scheduleJob
+     * @throws SchedulerException
+     */
+    public void pauseJob(ScheduleJob scheduleJob) throws SchedulerException {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        JobKey jobKey = JobKey.jobKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
+        scheduler.pauseJob(jobKey);
+    }
 
-	/**
-	 * ª÷∏¥“ª∏ˆjob
-	 *
-	 * @param scheduleJob
-	 * @throws SchedulerException
-	 */
-	public void resumeJob(ScheduleJob scheduleJob) throws SchedulerException {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-		JobKey jobKey = JobKey.jobKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
-		scheduler.resumeJob(jobKey);
-	}
+    /**
+     * ÊÅ¢Â§ç‰∏Ä‰∏™job
+     *
+     * @param scheduleJob
+     * @throws SchedulerException
+     */
+    public void resumeJob(ScheduleJob scheduleJob) throws SchedulerException {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        JobKey jobKey = JobKey.jobKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
+        scheduler.resumeJob(jobKey);
+    }
 
-	/**
-	 * …æ≥˝“ª∏ˆjob
-	 *
-	 * @param scheduleJob
-	 * @throws SchedulerException
-	 */
-	public void deleteJob(ScheduleJob scheduleJob) throws SchedulerException {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-		JobKey jobKey = JobKey.jobKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
-		scheduler.deleteJob(jobKey);
+    /**
+     * Âà†Èô§‰∏Ä‰∏™job
+     *
+     * @param scheduleJob
+     * @throws SchedulerException
+     */
+    public void deleteJob(ScheduleJob scheduleJob) throws SchedulerException {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        JobKey jobKey = JobKey.jobKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
+        scheduler.deleteJob(jobKey);
 
-	}
+    }
 
-	/**
-	 * ¡¢º¥÷¥––job
-	 *
-	 * @param scheduleJob
-	 * @throws SchedulerException
-	 */
-	public void runAJobNow(ScheduleJob scheduleJob) throws SchedulerException {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-		JobKey jobKey = JobKey.jobKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
-		scheduler.triggerJob(jobKey);
-	}
+    /**
+     * Á´ãÂç≥ÊâßË°åjob
+     *
+     * @param scheduleJob
+     * @throws SchedulerException
+     */
+    public void runAJobNow(ScheduleJob scheduleJob) throws SchedulerException {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        JobKey jobKey = JobKey.jobKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
+        scheduler.triggerJob(jobKey);
+    }
 
-	/**
-	 * ∏¸–¬job ±º‰±Ì¥Ô Ω
-	 *
-	 * @param scheduleJob
-	 * @throws SchedulerException
-	 */
-	public void updateJobCron(ScheduleJob scheduleJob) throws SchedulerException {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
+    /**
+     * Êõ¥Êñ∞jobÊó∂Èó¥Ë°®ËææÂºè
+     *
+     * @param scheduleJob
+     * @throws SchedulerException
+     */
+    public void updateJobCron(ScheduleJob scheduleJob) throws SchedulerException {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
-		TriggerKey triggerKey = TriggerKey.triggerKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
+        TriggerKey triggerKey = TriggerKey.triggerKey(scheduleJob.getJobName(), scheduleJob.getJobGroup());
 
-		CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+        CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
 
-		CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleJob.getCronExpression());
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleJob.getCronExpression());
 
-		trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+        trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
 
-		scheduler.rescheduleJob(triggerKey, trigger);
-	}
+        scheduler.rescheduleJob(triggerKey, trigger);
+    }
 
-	public static void main(String[] args) {
-		CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("xxxxx");
-	}
+    public static void main(String[] args) {
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("xxxxx");
+    }
 }

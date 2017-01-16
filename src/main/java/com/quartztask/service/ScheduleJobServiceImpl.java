@@ -14,4 +14,19 @@ public class ScheduleJobServiceImpl extends BaseDaoImpl implements IScheduleJobS
     public List<ScheduleJob> getAllJobList() {
         return queryList("scheduleJob.getAll", null);
     }
+
+    @Override
+    public ScheduleJob getJobById(Long id) {
+        return queryObjectById("scheduleJob.selectByPrimaryKey",id);
+    }
+
+    @Override
+    public void updateByPrimaryKeySelective(ScheduleJob job) {
+        update("scheduleJob.updateByPrimaryKey", job);
+    }
+
+    @Override
+    public void insertSelective(ScheduleJob job) {
+        insert("scheduleJob.insertSelective", job);
+    }
 }
