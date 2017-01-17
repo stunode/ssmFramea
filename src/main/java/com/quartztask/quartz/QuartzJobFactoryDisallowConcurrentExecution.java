@@ -9,18 +9,18 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- *
- * @Description: 若一个方法一次执行不完下次轮转时则等待改方法执行完后才执行下一次操作
+ * 
+ * @Description: 禁止并发执行,在上次一调度没有执行完成时,下一次调度会等待上一次调度完成然后再执行
  * @author chenjianlin
- * @date 2014年4月24日 下午5:05:47
+ * @date 2014��4��24�� ����5:05:47
  */
 @DisallowConcurrentExecution
 public class QuartzJobFactoryDisallowConcurrentExecution implements Job {
-    public final Logger log = Logger.getLogger(this.getClass());
+	public final Logger log = Logger.getLogger(this.getClass());
 
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        ScheduleJob scheduleJob = (ScheduleJob) context.getMergedJobDataMap().get("scheduleJob");
-        TaskUtils.invokMethod(scheduleJob);
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		ScheduleJob scheduleJob = (ScheduleJob) context.getMergedJobDataMap().get("scheduleJob");
+		TaskUtils.invokMethod(scheduleJob);
 
-    }
+	}
 }
