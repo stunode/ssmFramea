@@ -8,6 +8,7 @@ import java.util.List;
  * Created by Administrator on 2017/1/13.
  */
 public interface IScheduleJobService {
+
     /**
      *function：获取所有任务
     */
@@ -18,7 +19,10 @@ public interface IScheduleJobService {
      */
     ScheduleJob getJobById(Long id);
 
-    void updateByPrimaryKeySelective(ScheduleJob job);
+    /**
+     *function：更新调度状态
+    */
+    void updateByPrimaryKeySelective(Long jobId, String cmd);
 
     /**
      *function：新建调度任务

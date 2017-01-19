@@ -25,4 +25,5 @@
         from items
         where id = #{id,jdbcType=INTEGER}
     </select>
+
 </mapper>

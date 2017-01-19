@@ -11,8 +11,6 @@ import org.quartz.JobExecutionException;
 /**
  * 
  * @Description: 禁止并发执行,在上次一调度没有执行完成时,下一次调度会等待上一次调度完成然后再执行
- * @author chenjianlin
- * @date 2014��4��24�� ����5:05:47
  */
 @DisallowConcurrentExecution
 public class QuartzJobFactoryDisallowConcurrentExecution implements Job {

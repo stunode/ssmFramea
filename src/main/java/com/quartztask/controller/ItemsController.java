@@ -1,9 +1,9 @@
 package com.quartztask.controller;
 
-import com.quartztask.entity.Items;
 import com.quartztask.entity.ScheduleJob;
-import com.quartztask.service.ItemsService;
-import com.quartztask.service.JobTaskService;
+import com.quartztask.service.IScheduleJobService;
+import com.quartztask.service.ScheduleJobServiceImpl;
+import com.quartztask.taskService.JobTaskService;
 import com.quartztask.util.ResultMapObj;
 import com.quartztask.util.SpringUtils;
 import org.apache.commons.lang.StringUtils;
@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * function：调度系统控制页面
@@ -29,6 +27,8 @@ public class ItemsController {
 
     @Autowired
     private JobTaskService taskService;
+    @Autowired
+    private IScheduleJobService scheduleJobService;
 
     /**
      * function：初始化页面列表
@@ -50,11 +50,12 @@ public class ItemsController {
         ResultMapObj resultMap = new ResultMapObj();
         resultMap.setFlag(false);
         try {
-            taskService.changeStatus(jobId, cmd);
+//            taskService.changeStatus(jobId, cmd);
+            scheduleJobService.updateByPrimaryKeySelective(jobId, cmd);
             resultMap.setMsg("状态改变成功！");
             resultMap.setFlag(true);
             return resultMap.toJson();
-        } catch (SchedulerException e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             resultMap.setMsg("任务状态改变失败！");
             return resultMap.toJson();

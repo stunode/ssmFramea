@@ -1,8 +1,9 @@
-package com.quartztask.service;
+package com.quartztask.taskService;
 
 import com.quartztask.entity.ScheduleJob;
 import com.quartztask.quartz.QuartzJobFactory;
 import com.quartztask.quartz.QuartzJobFactoryDisallowConcurrentExecution;
+import com.quartztask.service.IScheduleJobService;
 import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -47,25 +48,26 @@ public class JobTaskService {
         job.setCreateTime(new Date());
         scheduleJobService.insertSelective(job);
     }
-    /**
-     * 更改任务状态
-     *
-     * @throws SchedulerException
-     */
-    public void changeStatus(Long jobId, String cmd) throws SchedulerException {
-        ScheduleJob job = scheduleJobService.getJobById(jobId);
-        if (job == null) {
-            return;
-        }
-        if ("stop".equals(cmd)) {
-            deleteJob(job);
-            job.setJobStatus(ScheduleJob.STATUS_NOT_RUNNING);
-        } else if ("start".equals(cmd)) {
-            job.setJobStatus(ScheduleJob.STATUS_RUNNING);
-            addJob(job);
-        }
-        scheduleJobService.updateByPrimaryKeySelective(job);
-    }
+//    /**
+//     * 更改任务状态
+//     *
+//     * @throws SchedulerException
+//     */
+//    public void changeStatus(Long jobId, String cmd) throws SchedulerException {
+//        ScheduleJob job = scheduleJobService.getJobById(jobId);
+//        if (job == null) {
+//            return;
+//        }
+//        if ("stop".equals(cmd)) {
+//            deleteJob(job);
+//            job.setJobStatus(ScheduleJob.STATUS_NOT_RUNNING);
+//        } else if ("start".equals(cmd)) {
+//            job.setJobStatus(ScheduleJob.STATUS_RUNNING);
+//            addJob(job);
+//        }
+//        scheduleJobService.updateByPrimaryKeySelective(job);
+//
+//    }
 
     /**
      * 添加任务
