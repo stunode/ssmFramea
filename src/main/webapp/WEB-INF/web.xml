@@ -19,28 +19,30 @@
     <!-- Spring监听器:加载指定配置文件到context上下文 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath*:applicationContext*.xml,classpath*:applicationCxf.xml</param-value>
+        <!--web启动配置-->
+        <!--<param-value>classpath*:applicationContext*.xml</param-value>-->
+        <!--webservice服务端启动配置-->
+        <param-value>classpath*:applicationCxf.xml</param-value>
     </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <!-- Spring MVC servlet：默认是查找/SpringMVC-servlet.xml -->
-    <servlet>
-        <servlet-name>SpringMVC</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:springMVC.xml</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SpringMVC</servlet-name>
-        <url-pattern>*.htm</url-pattern>
-    </servlet-mapping>
+    <!--<servlet>-->
+        <!--<servlet-name>SpringMVC</servlet-name>-->
+        <!--<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>-->
+        <!--<init-param>-->
+            <!--<param-name>contextConfigLocation</param-name>-->
+            <!--<param-value>classpath:springMVC.xml</param-value>-->
+        <!--</init-param>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>SpringMVC</servlet-name>-->
+        <!--<url-pattern>*.htm</url-pattern>-->
+    <!--</servlet-mapping>-->
 
 
-    <!-- ==============CXF============= -->
-
+    <!--&lt;!&ndash; ==============CXF============= &ndash;&gt;-->
     <servlet>
         <servlet-name>cxf</servlet-name>
         <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>

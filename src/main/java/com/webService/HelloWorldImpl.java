@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import javax.jws.WebService;
 
-//@WebService(endpointInterface = "com.webService.HelloWorld")
 @Service("helloWorld")
 public class HelloWorldImpl implements HelloWorld {
 
