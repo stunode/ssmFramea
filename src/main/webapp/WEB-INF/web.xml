@@ -19,7 +19,7 @@
     <!-- Spring监听器:加载指定配置文件到context上下文 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath*:applicationContext*.xml,classpath*:applicationCxf.xml</param-value>
+        <param-value>classpath*:applicationContext*.xml</param-value>
     </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -41,16 +41,16 @@
 
     <!-- ==============CXF============= -->
 
-    <servlet>
-        <servlet-name>cxf</servlet-name>
-        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+    <!--<servlet>-->
+        <!--<servlet-name>cxf</servlet-name>-->
+        <!--<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>-->
+        <!--<load-on-startup>1</load-on-startup>-->
+    <!--</servlet>-->
 
-    <servlet-mapping>
-        <servlet-name>cxf</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>cxf</servlet-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</servlet-mapping>-->
     <!-- ############################################ filter start  ############################################ -->
     <!-- 编码过滤器 -->
     <filter>

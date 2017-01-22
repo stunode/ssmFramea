@@ -3,5 +3,6 @@
 <body>
 <h2>你好</h2>
 <a href="${pageContext.request.contextPath }/task/taskList.htm">测试</a>
+<a href="${pageContext.request.contextPath }/alipay/alipay.htm">测试</a>
 </body>
 </html>

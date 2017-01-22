@@ -217,6 +217,18 @@
             <version>${cxf.version}</version>
         </dependency>
         <!-- End of CXF Dependencies -->
+
+        <!--dom4j编辑xml依赖-->
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>QuartzTest</finalName>
