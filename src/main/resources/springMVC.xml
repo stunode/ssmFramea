@@ -17,6 +17,10 @@
     <!-- 扫描controller控制器-->
     <context:component-scan base-package="com.quartztask.controller"/>
 
+    <context:component-scan base-package="com.quartztask">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
     <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀(如果最后一个还是表示文件夹,则最后的斜杠不要漏了) 使用JSP-->
     <bean id="viewResolver" abstract="true">
         <property name="attributes">

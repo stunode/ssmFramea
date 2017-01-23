@@ -60,7 +60,8 @@
 </div>
 
 
-
+<script src="${resRoot}js/commonJs.js"></script>
+<script src="${resRoot}js/jquery-1.9.1.min.js"></script>
 <script>
 
   $(function () {
@@ -76,7 +77,7 @@
           $(".allhide ").hide();
           $(".creatcard_bank").hide();
           $(".pay_way").css("border","1px");
-          window.open(getBasePath() + "/alipay/pcalipay.htm?orderId=${order.orderId}")
+          window.open(getBasePath() + "/alipay/pcalipay.htm")
         }
       });
     });

@@ -1,7 +1,8 @@
 package com.quartztask.httpClient;
 
 
-import cn.myallways.iglp.webx.utils.alipay.AlipayConfig;
+
+import com.quartztask.alipay.AlipayConfig;
 import org.apache.commons.httpclient.Header;
 
 import java.io.UnsupportedEncodingException;
