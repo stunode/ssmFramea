@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/data/mongo
+          http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd  
+          http://www.springframework.org/schema/beans  
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--&lt;!&ndash;<bean id="primaryPreferredReadPreference" class="com.mongodb.TaggableReadPreference.PrimaryPreferredReadPreference" />&ndash;&gt;-->
+    <mongo:mongo id="replicaSetMongo" replica-set="10.108.6.3:27017,10.108.6.3:27018" write-concern="SAFE">
+        <!-- 每个IP的连接数-->
+        <mongo:options connections-per-host="100"
+                       threads-allowed-to-block-for-connection-multiplier="50"
+                       auto-connect-retry="true"/>
+    </mongo:mongo>
+
+
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongo" ref="replicaSetMongo" />
+        <!--<constructor-arg ref="mongo"/>-->
+        <constructor-arg name="databaseName" value="lp" />
+        <constructor-arg name="userCredentials"  ref="userCredentials" />
+        <!--<property name="readPreference" ref="primaryPreferredReadPreference" />-->
+    </bean>
+    <bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+        <constructor-arg name="username" value="lpapp" />
+        <constructor-arg name="password" value="lpapp" />
+    </bean>
+
+</beans>
